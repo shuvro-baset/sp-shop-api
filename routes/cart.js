@@ -5,7 +5,7 @@ const router = require('express').Router();
 
 // CREATE Product
 router.post("/add", verifyToken, async (req, res) => {
-    const newProduct = new Cart(req.body);
+    const newCart = new Cart(req.body);
 
     try {
         const savedCart = await newCart.save();
@@ -14,7 +14,6 @@ router.post("/add", verifyToken, async (req, res) => {
         res.status(500).send(err);
     }
 })
-
 
 
 //UPDATE
