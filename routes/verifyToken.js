@@ -7,7 +7,6 @@ const verifyToken = ( req, res, next) => {
     
     if (authHeader) {
         const token = authHeader.split(" ")[1];
-        console.log("verifyToken: ", token);
         jwt.verify(token, process.env.JWT_SEC, (err, user) => {
             if(err) res.status(403).json("Token is not valid!")
             req.user = user;
@@ -23,9 +22,7 @@ const verifyToken = ( req, res, next) => {
 
 const verifyTokenAndAuthorization = (req, res, next) => {
     verifyToken(req, res, ()=> {
-        console.log("verifyTokenAuthorization: ")
         if(req.user.id === req.params.id || req.user.isAdmin){
-            console.log("req user id: ", req.user.id)
             next();
         }else {
             res.status(403).json("You are not allowed to do that!")
@@ -33,4 +30,19 @@ const verifyTokenAndAuthorization = (req, res, next) => {
     })
 }
 
-module.exports = {verifyToken, verifyTokenAndAuthorization};
+
+const verifyTokenAndAdmin = (req, res, next) => {
+    verifyToken(req, res, ()=> {
+        if( req.user.isAdmin ){
+            next();
+        }else {
+            res.status(403).json("You are not allowed to do that!")
+        }
+    })
+}
+
+module.exports = {
+    verifyToken, 
+    verifyTokenAndAuthorization,
+    verifyTokenAndAdmin
+};
